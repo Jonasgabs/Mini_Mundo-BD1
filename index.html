@@ -11,7 +11,7 @@
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f4f4f4; }
         tr:hover { background-color: #f1f1f1; }
-        .focused { border: 2px solid aqua; }
+        .focused { border: 3px solid #007BFF; }
     </style>
 </head>
 <body>
@@ -50,9 +50,37 @@
     <tr><th>Nome</th><th>Tipo</th><th>PK</th><th>NN</th><th>UQ</th><th>FK</th><th>Default</th></tr>
     <tr><td>Cliente_CPF</td><td>CHAR(11)</td><td>-</td><td>✔</td><td>-</td><td>✔</td><td>-</td></tr>
     <tr><td>Produto_Codigo</td><td>INT</td><td>-</td><td>✔</td><td>-</td><td>✔</td><td>-</td></tr>
+    <tr><td>Status_Entrega</td><td>VARCHAR(45)</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
 </table>
 
-<!-- Adicionar mais tabelas conforme necessário -->
+<h2 id="Observacao">Observação</h2>
+<table>
+    <tr><th>Nome</th><th>Tipo</th><th>PK</th><th>NN</th><th>UQ</th><th>FK</th><th>Default</th></tr>
+    <tr><td>ID</td><td>INT</td><td>✔</td><td>✔</td><td>✔</td><td>-</td><td>-</td></tr>
+    <tr><td>Pedido_Cliente_CPF</td><td>CHAR(11)</td><td>-</td><td>✔</td><td>-</td><td>✔</td><td>-</td></tr>
+    <tr><td>Observação</td><td>VARCHAR(150)</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+</table>
+
+<h2 id="Funcionario">Funcionário</h2>
+<table>
+    <tr><th>Nome</th><th>Tipo</th><th>PK</th><th>NN</th><th>UQ</th><th>FK</th><th>Default</th></tr>
+    <tr><td>CPF</td><td>CHAR(11)</td><td>✔</td><td>✔</td><td>✔</td><td>-</td><td>-</td></tr>
+    <tr><td>Nome</td><td>VARCHAR(150)</td><td>-</td><td>✔</td><td>-</td><td>-</td><td>-</td></tr>
+</table>
+
+<h2 id="Preparo">Preparo</h2>
+<table>
+    <tr><th>Nome</th><th>Tipo</th><th>PK</th><th>NN</th><th>UQ</th><th>FK</th><th>Default</th></tr>
+    <tr><td>Funcionário_CPF</td><td>CHAR(11)</td><td>-</td><td>✔</td><td>-</td><td>✔</td><td>-</td></tr>
+    <tr><td>Produto_Codigo</td><td>INT</td><td>-</td><td>✔</td><td>-</td><td>✔</td><td>-</td></tr>
+</table>
+
+<h2 id="Produto">Produto</h2>
+<table>
+    <tr><th>Nome</th><th>Tipo</th><th>PK</th><th>NN</th><th>UQ</th><th>FK</th><th>Default</th></tr>
+    <tr><td>Código</td><td>INT</td><td>✔</td><td>✔</td><td>✔</td><td>-</td><td>-</td></tr>
+    <tr><td>Preço</td><td>FLOAT</td><td>-</td><td>✔</td><td>-</td><td>-</td><td>-</td></tr>
+</table>
 
 <script>
     $(document).ready(function () {
@@ -66,4 +94,3 @@
 
 </body>
 </html>
-
