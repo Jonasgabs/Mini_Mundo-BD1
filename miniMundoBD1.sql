@@ -92,7 +92,7 @@ CREATE TABLE pedido(
     entregador_cpf CHAR(11) NOT NULL,
     atendente_cpf CHAR(11),
     CONSTRAINT FK_CLIENTE_CPF FOREIGN KEY (cliente_cpf) REFERENCES cliente(cpf),
-    CONSTRAINT FK_PRODUTO_CODIGO FOREIGN KEY (produto_codigo) REFERENCES produto(codigo),
+    CONSTRAINT FK_PRODUTO_CODIGO_PEDIDO FOREIGN KEY (produto_codigo) REFERENCES produto(codigo),
     CONSTRAINT FK_ENTREGADOR_CPF FOREIGN KEY (entregador_cpf) REFERENCES entregador(funcionario_cpf),
     CONSTRAINT FK_ATENDENTE_CPF FOREIGN KEY (atendente_cpf) REFERENCES sac(funcionario_cpf),
     CONSTRAINT PK_PEDIDO PRIMARY KEY (cliente_cpf, produto_codigo, data_hora, entregador_cpf)
@@ -109,3 +109,6 @@ CREATE TABLE observacao(
     REFERENCES pedido(cliente_cpf, produto_codigo, data_hora, entregador_cpf),
     CONSTRAINT PK_OBSERVACAO PRIMARY KEY (pedido_cliente_cpf, pedido_produto_codigo, pedido_data_hora, pedido_entregador_cpf, id)
 );
+
+SHOW TABLES
+
