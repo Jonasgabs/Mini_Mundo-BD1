@@ -1,0 +1,98 @@
+-- Criacao do Banco de Dados
+CREATE DATABASE IF NOT EXISTS ChefeNaPorta;
+USE ChefeNaPorta;
+
+-- Criacao da Tabela Cliente
+CREATE TABLE Cliente (
+    CPF CHAR(11) PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    telefone VARCHAR(15) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    genero CHAR(1) CHECK (genero IN ('M', 'F')),
+    data_nascimento DATE CHECK (YEAR(data_nascimento) <= YEAR(CURDATE()))
+);
+
+-- Criacao da Tabela Funcionario
+CREATE TABLE Funcionario (
+    CPF CHAR(11) PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    telefone VARCHAR(15) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    cargo ENUM('SAC', 'Entregador', 'Cozinheiro') NOT NULL,
+    chefe_CPF CHAR(11),
+    FOREIGN KEY (chefe_CPF) REFERENCES Funcionario(CPF) ON DELETE SET NULL
+);
+
+-- Criacao da Tabela Produto
+CREATE TABLE Produto (
+    codigo INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL UNIQUE,
+    preco FLOAT NOT NULL CHECK (preco > 0)
+);
+
+-- Criacao da Tabela Pedido
+CREATE TABLE Pedido (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cliente_CPF CHAR(11),
+    data_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status_entrega ENUM('Aguardando Preparo', 'Saiu para entrega', 'Entregue') DEFAULT 'Aguardando Preparo',
+    FOREIGN KEY (cliente_CPF) REFERENCES Cliente(CPF)
+);
+
+-- Criacao da Tabela ItemPedido
+CREATE TABLE ItemPedido (
+    pedido_id INT,
+    produto_codigo INT,
+    quantidade INT CHECK (quantidade > 0),
+    PRIMARY KEY (pedido_id, produto_codigo),
+    FOREIGN KEY (pedido_id) REFERENCES Pedido(id),
+    FOREIGN KEY (produto_codigo) REFERENCES Produto(codigo)
+);
+
+-- Criacao da Tabela Entrega
+CREATE TABLE Entrega (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pedido_id INT UNIQUE,
+    entregador_CPF CHAR(11),
+    data_entrega DATETIME,
+    status ENUM('Saiu para entrega', 'Entregue') DEFAULT 'Saiu para entrega',
+    FOREIGN KEY (pedido_id) REFERENCES Pedido(id),
+    FOREIGN KEY (entregador_CPF) REFERENCES Funcionario(CPF)
+);
+
+-- Insercao de Dados
+INSERT INTO Cliente (CPF, nome, telefone, endereco, genero, data_nascimento) VALUES
+('12345678901', 'Joao Silva', '83999999999', 'Rua A, 123', 'M', '1990-05-15'),
+('98765432100', 'Maria Souza', '83988888888', 'Rua B, 456', 'F', '1985-08-25');
+
+INSERT INTO Funcionario (CPF, nome, telefone, endereco, cargo, chefe_CPF) VALUES
+('55555555555', 'Carlos Mendes', '83977777777', 'Rua C, 789', 'SAC', NULL),
+('66666666666', 'Ana Lima', '83966666666', 'Rua D, 101', 'Entregador', '55555555555');
+
+INSERT INTO Produto (nome, preco) VALUES
+('Hamburguer', 15.00),
+('Pizza', 30.00);
+
+INSERT INTO Pedido (cliente_CPF) VALUES
+('12345678901'),
+('98765432100');
+
+INSERT INTO ItemPedido (pedido_id, produto_codigo, quantidade) VALUES
+(1, 1, 2),
+(1, 2, 1),
+(2, 1, 3);
+
+INSERT INTO Entrega (pedido_id, entregador_CPF, data_entrega) VALUES
+(1, '66666666666', NOW());
+
+-- Consultas SQL
+SELECT * FROM Cliente WHERE genero IN ('M', 'F'); -- Exemplo de IN
+SELECT * FROM Pedido WHERE data_pedido BETWEEN '2024-01-01' AND '2024-12-31'; -- Exemplo de BETWEEN
+SELECT * FROM Entrega WHERE data_entrega IS NULL; -- Exemplo de IS NULL
+SELECT * FROM Cliente WHERE nome LIKE 'J%'; -- Exemplo de LIKE
+SELECT * FROM Pedido ORDER BY data_pedido DESC; -- Exemplo de ORDER BY
+SELECT COUNT(*) FROM Pedido; -- Exemplo de COUNT
+SELECT MAX(preco) FROM Produto; -- Exemplo de MAX
+SELECT cliente_CPF, COUNT(*) FROM Pedido GROUP BY cliente_CPF; -- Exemplo de GROUP BY
+SELECT cliente_CPF, COUNT(*) FROM Pedido GROUP BY cliente_CPF HAVING COUNT(*) > 1; -- Exemplo de HAVING
+SELECT Pedido.id, Cliente.nome FROM Pedido JOIN Cliente ON Pedido.cliente_CPF = Cliente.CPF; -- Exemplo de JOIN
